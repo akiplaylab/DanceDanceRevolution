@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public sealed class SimpleDdrGame : MonoBehaviour
 {
@@ -19,7 +22,7 @@ public sealed class SimpleDdrGame : MonoBehaviour
     [SerializeField] Transform laneDownX;
     [SerializeField] Transform laneUpX;
     [SerializeField] Transform laneRightX;
-    [SerializeField] float travelTimeSec = 1.5f; // 出現→判定ラインまで何秒
+    [SerializeField] float travelTimeSec = 1.5f;
 
     [Header("Judgement Windows (sec)")]
     [SerializeField] float perfect = 0.03f;
@@ -27,11 +30,15 @@ public sealed class SimpleDdrGame : MonoBehaviour
     [SerializeField] float good = 0.10f;
     [SerializeField] float miss = 0.20f;
 
+    [Header("Recording")]
+    [SerializeField] bool enableRecording = true;
+    [SerializeField] string recordedFileName = "chart_recorded.json";
+    [SerializeField] float recordQuantizeSec = 0.0f; // 0なら量子化なし。例: 0.01 で10ms刻み
+
     Chart chart;
     double dspStartTime;
     int nextSpawnIndex;
 
-    // レーンごとに「まだ叩かれてないノーツ」を保持（先頭が次に叩くべき）
     readonly Dictionary<Lane, LinkedList<NoteView>> active = new()
     {
         [Lane.Left] = new(),
@@ -40,19 +47,20 @@ public sealed class SimpleDdrGame : MonoBehaviour
         [Lane.Right] = new(),
     };
 
+    bool isRecording;
+    readonly List<NoteEvent> recordedNotes = new();
+
     void Start()
     {
         chart = Chart.LoadFromStreamingAssets(chartFileName);
 
-        // musicClip は Inspector で入れてもいいし、
-        // StreamingAssetsからロードしたいなら別途ロード処理が必要（まずはInspector推奨）
         audioSource.clip = musicClip;
-
-        // DSP基準でスタート時刻を固定
-        dspStartTime = AudioSettings.dspTime + 0.2; // 少し先に予約
+        dspStartTime = AudioSettings.dspTime + 0.2;
         audioSource.PlayScheduled(dspStartTime);
 
         nextSpawnIndex = 0;
+
+        Debug.Log($"Loaded notes: {chart.Notes.Count}, offset: {chart.OffsetSec:0.###}");
     }
 
     void Update()
@@ -61,21 +69,79 @@ public sealed class SimpleDdrGame : MonoBehaviour
 
         SpawnNotes(songTime);
         UpdateNotePositions(songTime);
+
+        HandleRecordingHotkeys(songTime);
         HandleInput(songTime);
+
         CleanupMissed(songTime);
     }
 
     double GetSongTimeSec()
         => (AudioSettings.dspTime - dspStartTime) + chart.OffsetSec;
 
+    void HandleRecordingHotkeys(double songTime)
+    {
+        if (!enableRecording) return;
+
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        if (kb.rKey.wasPressedThisFrame)
+        {
+            isRecording = !isRecording;
+            Debug.Log(isRecording
+                ? "Recording: ON (press arrow keys to add notes)"
+                : "Recording: OFF");
+        }
+
+        if (kb.sKey.wasPressedThisFrame)
+        {
+            SaveRecordedChart();
+        }
+
+        // 録画中にBで録画ノーツだけ全消し（保険）
+        if (kb.bKey.wasPressedThisFrame)
+        {
+            recordedNotes.Clear();
+            Debug.Log("Recorded notes cleared.");
+        }
+    }
+
+    void SaveRecordedChart()
+    {
+        if (!enableRecording) return;
+
+        // StreamingAssets は Editor/PC実行では書けるが、
+        // 一部プラットフォームやビルド後は書けないことがある点に注意。
+        Directory.CreateDirectory(Application.streamingAssetsPath);
+
+        var outJson = new ChartJsonOut
+        {
+            musicFile = chart.MusicFile,
+            offsetSec = (float)chart.OffsetSec,
+            notes = recordedNotes
+                .OrderBy(n => n.TimeSec)
+                .Select(n => new NoteJsonOut
+                {
+                    timeSec = (float)n.TimeSec,
+                    lane = n.Lane.ToString()
+                })
+                .ToArray()
+        };
+
+        var json = JsonUtility.ToJson(outJson, prettyPrint: true) + "\n";
+        var path = Path.Combine(Application.streamingAssetsPath, recordedFileName);
+        File.WriteAllText(path, json);
+
+        Debug.Log($"Saved recorded chart: {path} (notes={recordedNotes.Count})");
+    }
+
     void SpawnNotes(double songTime)
     {
-        // 出現タイミング = noteTime - travelTime
         while (nextSpawnIndex < chart.Notes.Count)
         {
             var note = chart.Notes[nextSpawnIndex];
             var spawnTime = note.TimeSec - travelTimeSec;
-
             if (songTime < spawnTime) break;
 
             var view = Instantiate(notePrefab, transform);
@@ -94,7 +160,6 @@ public sealed class SimpleDdrGame : MonoBehaviour
             foreach (var n in active[lane])
             {
                 var t = (float)((n.timeSec - songTime) / travelTimeSec);
-                // t=1 ならスポーン位置、t=0 なら判定ライン
                 var y = Mathf.Lerp(judgeLineY.position.y, spawnY.position.y, Mathf.Clamp01(t));
                 var x = GetLaneX(lane);
                 n.transform.position = new Vector3(x, y, 0);
@@ -104,15 +169,26 @@ public sealed class SimpleDdrGame : MonoBehaviour
 
     void HandleInput(double songTime)
     {
-        TryHit(Lane.Left, Input.GetKeyDown(KeyCode.LeftArrow), songTime);
-        TryHit(Lane.Down, Input.GetKeyDown(KeyCode.DownArrow), songTime);
-        TryHit(Lane.Up, Input.GetKeyDown(KeyCode.UpArrow), songTime);
-        TryHit(Lane.Right, Input.GetKeyDown(KeyCode.RightArrow), songTime);
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        TryHit(Lane.Left, kb.leftArrowKey.wasPressedThisFrame, songTime);
+        TryHit(Lane.Down, kb.downArrowKey.wasPressedThisFrame, songTime);
+        TryHit(Lane.Up, kb.upArrowKey.wasPressedThisFrame, songTime);
+        TryHit(Lane.Right, kb.rightArrowKey.wasPressedThisFrame, songTime);
     }
 
     void TryHit(Lane lane, bool pressed, double songTime)
     {
         if (!pressed) return;
+
+        // 録画：押した瞬間にノーツを記録（判定より先にやる）
+        if (enableRecording && isRecording)
+        {
+            var t = Quantize(songTime, recordQuantizeSec);
+            recordedNotes.Add(new NoteEvent(t, lane));
+            Debug.Log($"REC {lane} @ {t:0.000}");
+        }
 
         var list = active[lane];
         if (list.First == null)
@@ -121,9 +197,8 @@ public sealed class SimpleDdrGame : MonoBehaviour
             return;
         }
 
-        // 最小版：先頭ノーツのみを対象（DDRの基本挙動）
         var note = list.First.Value;
-        var dt = System.Math.Abs(note.timeSec - songTime);
+        var dt = Math.Abs(note.timeSec - songTime);
 
         var result =
             dt <= perfect ? "Perfect" :
@@ -133,12 +208,17 @@ public sealed class SimpleDdrGame : MonoBehaviour
 
         Debug.Log($"{lane}: {result} (dt={dt:0.000})");
 
-        // 当たった扱いにする範囲
         if (dt <= miss)
         {
             list.RemoveFirst();
             Destroy(note.gameObject);
         }
+    }
+
+    static double Quantize(double timeSec, float stepSec)
+    {
+        if (stepSec <= 0) return timeSec;
+        return Math.Round(timeSec / stepSec) * stepSec;
     }
 
     void CleanupMissed(double songTime)
@@ -149,7 +229,6 @@ public sealed class SimpleDdrGame : MonoBehaviour
             while (list.First != null)
             {
                 var n = list.First.Value;
-                // ノーツ時刻 + miss を過ぎたらミス確定で消す
                 if (songTime <= n.timeSec + miss) break;
 
                 Debug.Log($"{lane}: Miss (late)");
@@ -167,4 +246,20 @@ public sealed class SimpleDdrGame : MonoBehaviour
         Lane.Right => laneRightX.position.x,
         _ => 0
     };
+
+    // ★ 書き出し用（JsonUtility向け）
+    [Serializable]
+    private class ChartJsonOut
+    {
+        public string musicFile;
+        public float offsetSec;
+        public NoteJsonOut[] notes;
+    }
+
+    [Serializable]
+    private class NoteJsonOut
+    {
+        public float timeSec;
+        public string lane;
+    }
 }

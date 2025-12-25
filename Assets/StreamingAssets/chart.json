@@ -1,22 +1,82 @@
 {
-  "musicFile": "song.mp3",
-  "offsetSec": 0.0,
-  "notes": [
-    {
-      "timeSec": 1.000,
-      "lane": "Left"
-    },
-    {
-      "timeSec": 1.250,
-      "lane": "Down"
-    },
-    {
-      "timeSec": 1.500,
-      "lane": "Up"
-    },
-    {
-      "timeSec": 1.750,
-      "lane": "Right"
-    }
-  ]
+    "musicFile": "dance-mood.mp3",
+    "offsetSec": -0.07999999821186066,
+    "notes": [
+        {
+            "timeSec": 9.192000389099121,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 9.661333084106446,
+            "lane": "Down"
+        },
+        {
+            "timeSec": 10.130666732788086,
+            "lane": "Left"
+        },
+        {
+            "timeSec": 10.600000381469727,
+            "lane": "Right"
+        },
+        {
+            "timeSec": 11.090666770935059,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 11.58133316040039,
+            "lane": "Down"
+        },
+        {
+            "timeSec": 12.071999549865723,
+            "lane": "Left"
+        },
+        {
+            "timeSec": 12.562666893005371,
+            "lane": "Right"
+        },
+        {
+            "timeSec": 13.031999588012696,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 13.565333366394043,
+            "lane": "Down"
+        },
+        {
+            "timeSec": 14.013333320617676,
+            "lane": "Left"
+        },
+        {
+            "timeSec": 14.482666969299317,
+            "lane": "Right"
+        },
+        {
+            "timeSec": 15.037333488464356,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 15.293333053588868,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 15.506667137145996,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 15.7413330078125,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 15.954667091369629,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 16.167999267578126,
+            "lane": "Up"
+        },
+        {
+            "timeSec": 16.46666717529297,
+            "lane": "Up"
+        }
+    ]
 }

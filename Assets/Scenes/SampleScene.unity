@@ -287,7 +287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDdrGame
   chartFileName: chart.json
   audioSource: {fileID: 1982188417}
-  musicClip: {fileID: 8300000, guid: 894855607a8f0d844b09f566b7d52a51, type: 3}
+  musicClip: {fileID: 8300000, guid: c4c12f28566ea654482a64cb013d652f, type: 3}
   notePrefab: {fileID: 422535996257625606, guid: a8809871df1d4744d972c86de5a7a7f5, type: 3}
   spawnY: {fileID: 1098005563}
   judgeLineY: {fileID: 698216054}
@@ -300,6 +300,9 @@ MonoBehaviour:
   great: 0.06
   good: 0.1
   miss: 0.2
+  enableRecording: 1
+  recordedFileName: chart_recorded.json
+  recordQuantizeSec: 0
 --- !u!4 &567772417
 Transform:
   m_ObjectHideFlags: 0
