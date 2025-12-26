@@ -4,23 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public enum Lane { Left, Down, Up, Right }
-
-[Serializable]
-public class ChartJson
-{
-    public string musicFile;
-    public float offsetSec;
-    public NoteJson[] notes;
-}
-
-[Serializable]
-public class NoteJson
-{
-    public float timeSec;
-    public string lane;
-}
-
 public sealed class Chart
 {
     public string MusicFile { get; }
@@ -48,16 +31,5 @@ public sealed class Chart
             .ToList();
 
         return new Chart(raw.musicFile, raw.offsetSec, notes);
-    }
-}
-
-public readonly struct NoteEvent
-{
-    public double TimeSec { get; }
-    public Lane Lane { get; }
-    public NoteEvent(double timeSec, Lane lane)
-    {
-        TimeSec = timeSec;
-        Lane = lane;
     }
 }
