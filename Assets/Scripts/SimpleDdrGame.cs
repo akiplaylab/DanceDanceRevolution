@@ -40,6 +40,8 @@ public sealed class SimpleDdrGame : MonoBehaviour
     [SerializeField] ReceptorHitEffect upFx;
     [SerializeField] ReceptorHitEffect rightFx;
 
+    [SerializeField] JudgementTextPresenter judgementText;
+
     Chart chart;
     double dspStartTime;
     int nextSpawnIndex;
@@ -218,6 +220,14 @@ public sealed class SimpleDdrGame : MonoBehaviour
             dt <= miss ? 0.35f : 0.0f;
 
         GetFx(lane).Play(intensity);
+
+        Judgement judgement =
+            dt <= perfect ? Judgement.Perfect :
+            dt <= great ? Judgement.Great :
+            dt <= good ? Judgement.Good :
+            Judgement.Bad;
+
+        judgementText.Show(judgement);
 
         Debug.Log($"{lane}: {result} (dt={dt:0.000})");
 
