@@ -304,6 +304,10 @@ MonoBehaviour:
   enableRecording: 1
   recordedFileName: chart_recorded.json
   recordQuantizeSec: 0
+  leftFx: {fileID: 1836829148}
+  downFx: {fileID: 1433785563}
+  upFx: {fileID: 993595418}
+  rightFx: {fileID: 1163406705}
 --- !u!4 &567772417
 Transform:
   m_ObjectHideFlags: 0
@@ -503,6 +507,7 @@ GameObject:
   m_Component:
   - component: {fileID: 993595417}
   - component: {fileID: 993595416}
+  - component: {fileID: 993595418}
   m_Layer: 0
   m_Name: LaneUpX
   m_TagString: Untagged
@@ -583,6 +588,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!114 &993595418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993595415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8c471be37b5145b037abb0fcb43dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceptorHitEffect
+  flashColor: {r: 1, g: 0.95, b: 0.4, a: 1}
+  flashDuration: 0.07
+  punchScale: 1.12
+  punchUpTime: 0.04
+  punchDownTime: 0.06
 --- !u!1 &1098005561
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,6 +705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1163406704}
   - component: {fileID: 1163406703}
+  - component: {fileID: 1163406705}
   m_Layer: 0
   m_Name: LaneRightX
   m_TagString: Untagged
@@ -763,6 +786,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!114 &1163406705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163406702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8c471be37b5145b037abb0fcb43dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceptorHitEffect
+  flashColor: {r: 1, g: 0.95, b: 0.4, a: 1}
+  flashDuration: 0.07
+  punchScale: 1.12
+  punchUpTime: 0.04
+  punchDownTime: 0.06
 --- !u!1 &1433785560
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,6 +813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1433785562}
   - component: {fileID: 1433785561}
+  - component: {fileID: 1433785563}
   m_Layer: 0
   m_Name: LaneDownX
   m_TagString: Untagged
@@ -853,6 +894,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &1433785563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433785560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8c471be37b5145b037abb0fcb43dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceptorHitEffect
+  flashColor: {r: 1, g: 0.95, b: 0.4, a: 1}
+  flashDuration: 0.07
+  punchScale: 1.12
+  punchUpTime: 0.04
+  punchDownTime: 0.06
 --- !u!1 &1836829145
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,6 +921,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1836829147}
   - component: {fileID: 1836829146}
+  - component: {fileID: 1836829148}
   m_Layer: 0
   m_Name: LaneLeftX
   m_TagString: Untagged
@@ -943,6 +1002,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1836829148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836829145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd8c471be37b5145b037abb0fcb43dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceptorHitEffect
+  flashColor: {r: 1, g: 0.95, b: 0.4, a: 1}
+  flashDuration: 0.07
+  punchScale: 1.12
+  punchUpTime: 0.04
+  punchDownTime: 0.06
 --- !u!1 &1982188415
 GameObject:
   m_ObjectHideFlags: 0

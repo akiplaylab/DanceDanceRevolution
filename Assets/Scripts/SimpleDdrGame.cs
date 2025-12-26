@@ -34,6 +34,12 @@ public sealed class SimpleDdrGame : MonoBehaviour
     [SerializeField] string recordedFileName = "chart_recorded.json";
     [SerializeField] float recordQuantizeSec = 0.0f; // 0なら量子化なし。例: 0.01 で10ms刻み
 
+    [Header("Receptor Effects (fixed lanes)")]
+    [SerializeField] ReceptorHitEffect leftFx;
+    [SerializeField] ReceptorHitEffect downFx;
+    [SerializeField] ReceptorHitEffect upFx;
+    [SerializeField] ReceptorHitEffect rightFx;
+
     Chart chart;
     double dspStartTime;
     int nextSpawnIndex;
@@ -205,6 +211,14 @@ public sealed class SimpleDdrGame : MonoBehaviour
             dt <= good ? "Good" :
             dt <= miss ? "Bad" : "TooEarly/TooLate";
 
+        float intensity =
+            dt <= perfect ? 1.0f :
+            dt <= great ? 0.75f :
+            dt <= good ? 0.55f :
+            dt <= miss ? 0.35f : 0.0f;
+
+        GetFx(lane).Play(intensity);
+
         Debug.Log($"{lane}: {result} (dt={dt:0.000})");
 
         if (dt <= miss)
@@ -244,6 +258,15 @@ public sealed class SimpleDdrGame : MonoBehaviour
         if ((uint)i >= (uint)laneXs.Length) return 0f;
         return laneXs[i];
     }
+
+    ReceptorHitEffect GetFx(Lane lane) => lane switch
+    {
+        Lane.Left => leftFx,
+        Lane.Down => downFx,
+        Lane.Up => upFx,
+        Lane.Right => rightFx,
+        _ => throw new InvalidDataException($"Invalid lane: {lane}"),
+    };
 
     // ★ 書き出し用（JsonUtility向け）
     [Serializable]
