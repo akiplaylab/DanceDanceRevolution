@@ -291,11 +291,12 @@ MonoBehaviour:
   notePrefab: {fileID: 422535996257625606, guid: a8809871df1d4744d972c86de5a7a7f5, type: 3}
   spawnY: {fileID: 1098005563}
   judgeLineY: {fileID: 698216054}
-  laneLeftX: {fileID: 1836829147}
-  laneDownX: {fileID: 1433785562}
-  laneUpX: {fileID: 993595417}
-  laneRightX: {fileID: 1163406704}
   travelTimeSec: 1.5
+  laneXs:
+  - -3
+  - -1
+  - 1
+  - 3
   perfect: 0.03
   great: 0.06
   good: 0.1
