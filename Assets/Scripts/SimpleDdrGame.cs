@@ -75,7 +75,7 @@ public sealed class SimpleDdrGame : MonoBehaviour
         SpawnNotes(songTime);
         UpdateNotePositions(songTime);
 
-        HandleRecordingHotkeys(songTime);
+        HandleRecordingHotkeys();
         HandleInput(songTime);
 
         CleanupMissed(songTime);
@@ -84,7 +84,7 @@ public sealed class SimpleDdrGame : MonoBehaviour
     double GetSongTimeSec()
         => (AudioSettings.dspTime - dspStartTime) + chart.OffsetSec;
 
-    void HandleRecordingHotkeys(double songTime)
+    void HandleRecordingHotkeys()
     {
         if (!enableRecording) return;
 
