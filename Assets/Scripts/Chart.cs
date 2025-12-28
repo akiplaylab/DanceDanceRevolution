@@ -26,9 +26,8 @@ public sealed class Chart
         var path = Path.Combine(Application.streamingAssetsPath, fileName);
         var json = File.ReadAllText(path);
 
-        var raw = JsonUtility.FromJson<ChartJson>(json);
-        if (raw == null) throw new InvalidDataException($"Failed to parse {nameof(ChartJson)}.");
-        if (raw.measures == null) raw.measures = Array.Empty<ChartJson.Measure>();
+        var raw = JsonUtility.FromJson<ChartJson>(json) ?? throw new InvalidDataException($"Failed to parse {nameof(ChartJson)}.");
+        raw.measures ??= Array.Empty<ChartJson.Measure>();
 
         if (raw.bpm <= 0) throw new InvalidDataException($"Invalid bpm: {raw.bpm}");
 
