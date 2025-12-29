@@ -1179,14 +1179,7 @@ MonoBehaviour:
   appTitle: DanceDanceRevolution
   appDescription: Light up Razer Chroma devices on judgements.
   authorName: DanceDanceRevolution
-  authorContact: 
-  devices:
-  - keyboard
-  - mouse
-  - headset
-  - mousepad
-  - keypad
-  - chromalink
+  authorContact: https://developer.razer.com/chroma
 --- !u!1 &1836829145
 GameObject:
   m_ObjectHideFlags: 0
