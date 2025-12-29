@@ -25,6 +25,7 @@ public sealed class Game : MonoBehaviour
     [SerializeField] float[] laneXs = { -3f, -1f, 1f, 3f };
 
     [Header("Judgement Windows (sec)")]
+	[SerializeField] float marvelous = 0.015f; // ★追加（Perfectより狭い）
     [SerializeField] float perfect = 0.03f;
     [SerializeField] float great = 0.06f;
     [SerializeField] float good = 0.10f;
@@ -156,12 +157,14 @@ public sealed class Game : MonoBehaviour
         var dt = Math.Abs(note.TimeSec - songTime);
 
         var result =
+		    dt <= marvelous ? "Marvelous" :
             dt <= perfect ? "Perfect" :
             dt <= great ? "Great" :
             dt <= good ? "Good" :
             dt <= miss ? "Bad" : "TooEarly/TooLate";
 
         float intensity =
+		    dt <= marvelous ? 1.0f :
             dt <= perfect ? 1.0f :
             dt <= great ? 0.75f :
             dt <= good ? 0.55f :
@@ -170,6 +173,7 @@ public sealed class Game : MonoBehaviour
         GetFx(lane).Play(intensity);
 
         Judgement judgement =
+		    dt <= marvelous ? Judgement.Marvelous :
             dt <= perfect ? Judgement.Perfect :
             dt <= great ? Judgement.Great :
             dt <= good ? Judgement.Good :
