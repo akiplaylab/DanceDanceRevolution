@@ -64,21 +64,32 @@ public sealed class JudgementTextPresenter : MonoBehaviour
         transform.localScale = baseScale;
     }
 
+    public Color GetColor(Judgement j)
+    => j switch
+    {
+        Judgement.Marvelous => marvelousColor,
+        Judgement.Perfect => perfectColor,
+        Judgement.Great => greatColor,
+        Judgement.Good => goodColor,
+        Judgement.Bad => badColor,
+        _ => Color.white
+    };
+
     IEnumerator CoShow(Judgement j)
     {
         // set content
-        (string s, Color c, float targetScale) = j switch
+        (string s, float targetScale) = j switch
         {
-            Judgement.Marvelous => (marvelousText, marvelousColor, marvelousPunchScale),
-            Judgement.Perfect => (perfectText, perfectColor, perfectPunchScale),
-            Judgement.Great => (greatText, greatColor, greatPunchScale),
-            Judgement.Good => (goodText, goodColor, normalScale),
-            Judgement.Bad => (badText, badColor, normalScale),
-            _ => ("", Color.white, normalScale)
+            Judgement.Marvelous => (marvelousText, marvelousPunchScale),
+            Judgement.Perfect => (perfectText, perfectPunchScale),
+            Judgement.Great => (greatText, greatPunchScale),
+            Judgement.Good => (goodText, normalScale),
+            Judgement.Bad => (badText, normalScale),
+            _ => ("", normalScale)
         };
 
         text.text = s;
-        text.color = c;
+        text.color = GetColor(j);
         text.alpha = 1f;
 
         if (targetScale > normalScale)
