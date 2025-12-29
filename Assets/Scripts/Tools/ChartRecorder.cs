@@ -10,9 +10,28 @@ public sealed class ChartRecorder
     readonly bool enable;
     readonly string recordedFileName;
     readonly int recordSubdiv;
+    bool warnedInvalidSubdiv;
 
     bool isRecording;
-    readonly List<Note> notes = new();
+    readonly List<RecordedNote> notes = new();
+
+    sealed class RecordedNote
+    {
+        public int MeasureIndex { get; }
+        public int RowIndex { get; }
+        public double QuantizedTimeSec { get; }
+        public Lane Lane { get; }
+        public NoteDivision Division { get; }
+
+        public RecordedNote(int measureIndex, int rowIndex, double quantizedTimeSec, Lane lane, NoteDivision division)
+        {
+            MeasureIndex = measureIndex;
+            RowIndex = rowIndex;
+            QuantizedTimeSec = quantizedTimeSec;
+            Lane = lane;
+            Division = division;
+        }
+    }
 
     public ChartRecorder(bool enable, string recordedFileName, int recordSubdiv)
     {
@@ -48,41 +67,37 @@ public sealed class ChartRecorder
         }
     }
 
-    public void OnKeyPressed(Lane lane, double songTime)
+    public void OnKeyPressed(Lane lane, double songTime, Chart chart)
     {
         if (!IsRecording) return;
 
-        notes.Add(new Note(
-            songTime,
+        var subdiv = GetEffectiveSubdiv();
+        var secPerMeasure = (60.0 / chart.Bpm) * 4.0;
+
+        var (measureIndex, rowIndex) = QuantizeToGrid(songTime, secPerMeasure, subdiv);
+        var quantizedTimeSec =
+            (measureIndex * secPerMeasure)
+            + ((double)rowIndex / subdiv) * secPerMeasure;
+
+        notes.Add(new RecordedNote(
+            measureIndex,
+            rowIndex,
+            quantizedTimeSec,
             lane,
-            NoteDivision.Quarter // 仮
+            DivisionFromRow(rowIndex)
         ));
     }
 
     void Save(Chart chart)
     {
-        var subdiv = recordSubdiv;
-        if (subdiv % 4 != 0)
-        {
-            Debug.LogWarning($"recordSubdiv should be multiple of 4. current={subdiv}. Forced to 16.");
-            subdiv = 16;
-        }
-
-        var secPerBeat = 60.0 / chart.Bpm;
-        var secPerMeasure = secPerBeat * 4.0;
+        var subdiv = GetEffectiveSubdiv();
 
         var measures = new Dictionary<int, string[]>();
 
         foreach (var n in notes)
         {
-            var rawTime = n.TimeSec;
-
-            var measureIndex = (int)Math.Floor(rawTime / secPerMeasure);
-            var inMeasure = rawTime - measureIndex * secPerMeasure;
-            var row = (int)Math.Round((inMeasure / secPerMeasure) * subdiv);
-
-            if (row >= subdiv) { row = 0; measureIndex += 1; }
-            if (row < 0) { row = 0; }
+            var measureIndex = n.MeasureIndex;
+            var row = n.RowIndex;
 
             if (!measures.TryGetValue(measureIndex, out var rows))
             {
@@ -120,5 +135,37 @@ public sealed class ChartRecorder
         File.WriteAllText(path, json);
 
         Debug.Log($"Saved recorded chart: {path} (notes={notes.Count}, subdiv={subdiv})");
+    }
+
+    int GetEffectiveSubdiv()
+    {
+        if (recordSubdiv % 4 == 0) return recordSubdiv;
+
+        if (!warnedInvalidSubdiv)
+        {
+            Debug.LogWarning($"recordSubdiv should be multiple of 4. current={recordSubdiv}. Forced to 16.");
+            warnedInvalidSubdiv = true;
+        }
+
+        return 16;
+    }
+
+    static (int measureIndex, int rowIndex) QuantizeToGrid(double songTime, double secPerMeasure, int subdiv)
+    {
+        var measureIndex = (int)Math.Floor(songTime / secPerMeasure);
+        var inMeasure = songTime - measureIndex * secPerMeasure;
+        var row = (int)Math.Round((inMeasure / secPerMeasure) * subdiv);
+
+        if (row >= subdiv) { row = 0; measureIndex += 1; }
+        if (row < 0) { row = 0; }
+
+        return (measureIndex, row);
+    }
+
+    static NoteDivision DivisionFromRow(int row)
+    {
+        if (row % 4 == 0) return NoteDivision.Quarter;
+        if (row % 2 == 0) return NoteDivision.Eighth;
+        return NoteDivision.Sixteenth;
     }
 }

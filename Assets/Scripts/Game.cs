@@ -150,7 +150,7 @@ public sealed class Game : MonoBehaviour
     {
         if (!pressed) return;
 
-        recorder.OnKeyPressed(lane, songTime);
+        recorder.OnKeyPressed(lane, songTime, chart);
 
         var list = active[lane];
         if (list.First == null)
