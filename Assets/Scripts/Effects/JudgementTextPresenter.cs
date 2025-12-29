@@ -2,21 +2,11 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public enum Judgement
-{
-    None,
-	Marvelous, // ★追加
-    Perfect,
-    Great,
-    Good,
-    Bad
-}
-
 [RequireComponent(typeof(TMP_Text))]
 public sealed class JudgementTextPresenter : MonoBehaviour
 {
     [Header("Text")]
-	[SerializeField] string marvelousText = "MARVELOUS!!";
+    [SerializeField] string marvelousText = "MARVELOUS!!";
     [SerializeField] string perfectText = "PERFECT!";
     [SerializeField] string greatText = "GREAT!";
     [SerializeField] string goodText = "GOOD";
@@ -30,10 +20,10 @@ public sealed class JudgementTextPresenter : MonoBehaviour
     [SerializeField] Color badColor = Color.red;
 
     [Header("Punch Scale")]
-	
-	[Tooltip("Marvelous の最大拡大率")]
-	[SerializeField] float marvelousPunchScale = 1.35f;
-	
+
+    [Tooltip("Marvelous の最大拡大率")]
+    [SerializeField] float marvelousPunchScale = 1.35f;
+
     [Tooltip("Perfect の最大拡大率")]
     [SerializeField] float perfectPunchScale = 1.25f;
 
@@ -79,7 +69,7 @@ public sealed class JudgementTextPresenter : MonoBehaviour
         // set content
         (string s, Color c, float targetScale) = j switch
         {
-			Judgement.Marvelous => (marvelousText, marvelousColor, marvelousPunchScale),
+            Judgement.Marvelous => (marvelousText, marvelousColor, marvelousPunchScale),
             Judgement.Perfect => (perfectText, perfectColor, perfectPunchScale),
             Judgement.Great => (greatText, greatColor, greatPunchScale),
             Judgement.Good => (goodText, goodColor, normalScale),
