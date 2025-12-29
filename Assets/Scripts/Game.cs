@@ -88,7 +88,7 @@ public sealed class Game : MonoBehaviour
         SpawnNotes(songTime);
         UpdateNotePositions(songTime);
 
-        recorder.UpdateHotkeys(songTime, GetSongTimeSec, chart);
+        recorder.UpdateHotkeys(chart);
         HandleInput(songTime);
 
         CleanupMissed(songTime);
@@ -143,10 +143,7 @@ public sealed class Game : MonoBehaviour
     {
         if (!pressed) return;
 
-        if (enableRecording)
-        {
-            recorder.OnKeyPressed(lane, songTime);
-        }
+        recorder.OnKeyPressed(lane, songTime);
 
         var list = active[lane];
         if (list.First == null)

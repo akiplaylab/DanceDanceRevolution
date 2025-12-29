@@ -23,7 +23,7 @@ public sealed class ChartRecorder
 
     public bool IsRecording => enable && isRecording;
 
-    public void UpdateHotkeys(double songTime, Func<double> getSongTimeSec, Chart chart)
+    public void UpdateHotkeys(Chart chart)
     {
         if (!enable) return;
 
