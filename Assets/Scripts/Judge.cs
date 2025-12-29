@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed class Judge
 {
     [Header("Judgement Windows (sec)")]
-    [SerializeField] float marvelous = 0.015f; // ★追加（Perfectより狭い）
+    [SerializeField] float marvelous = 0.015f;
     [SerializeField] float perfect = 0.03f;
     [SerializeField] float great = 0.06f;
     [SerializeField] float good = 0.10f;
