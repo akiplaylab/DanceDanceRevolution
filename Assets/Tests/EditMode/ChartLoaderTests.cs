@@ -1,6 +1,5 @@
-using System;
-using System.IO;
 using NUnit.Framework;
+using System.IO;
 using UnityEngine;
 
 public sealed class ChartLoaderTests
@@ -26,15 +25,16 @@ public sealed class ChartLoaderTests
     [Test]
     public void LoadFromStreamingAssets_ReturnsNotesSortedByTime()
     {
-        var json = @"{
-            \"musicFile\": \"test.mp3\",
-            \"bpm\": 120,
-            \"offsetSec\": 0.5,
-            \"measures\": [
-                { \"subdiv\": 16, \"rows\": [\"1000\", \"0001\"] },
-                { \"subdiv\": 16, \"rows\": [\"0010\", \"0100\"] }
-            ]
-        }";
+        var json =
+            "{\n" +
+            "  \"musicFile\": \"test.mp3\",\n" +
+            "  \"bpm\": 120,\n" +
+            "  \"offsetSec\": 0.5,\n" +
+            "  \"measures\": [\n" +
+            "    { \"subdiv\": 16, \"rows\": [\"1000\", \"0001\"] },\n" +
+            "    { \"subdiv\": 16, \"rows\": [\"0010\", \"0100\"] }\n" +
+            "  ]\n" +
+            "}";
 
         var path = Path.Combine(streamingAssetsPath, "TestChartSorted.json");
         File.WriteAllText(path, json);
@@ -47,7 +47,9 @@ public sealed class ChartLoaderTests
 
         for (int i = 1; i < chart.Notes.Count; i++)
         {
-            Assert.That(chart.Notes[i].TimeSec, Is.GreaterThanOrEqualTo(chart.Notes[i - 1].TimeSec),
+            Assert.That(
+                chart.Notes[i].TimeSec,
+                Is.GreaterThanOrEqualTo(chart.Notes[i - 1].TimeSec),
                 $"Note at index {i} should not be earlier than note at index {i - 1}");
         }
     }
@@ -55,14 +57,15 @@ public sealed class ChartLoaderTests
     [Test]
     public void LoadFromStreamingAssets_AssignsNoteDivisionsFromRows()
     {
-        var json = @"{
-            \"musicFile\": \"test.mp3\",
-            \"bpm\": 150,
-            \"offsetSec\": 0.0,
-            \"measures\": [
-                { \"subdiv\": 16, \"rows\": [\"1000\", \"0100\", \"0010\"] }
-            ]
-        }";
+        var json =
+            "{\n" +
+            "  \"musicFile\": \"test.mp3\",\n" +
+            "  \"bpm\": 150,\n" +
+            "  \"offsetSec\": 0.0,\n" +
+            "  \"measures\": [\n" +
+            "    { \"subdiv\": 16, \"rows\": [\"1000\", \"0100\", \"0010\"] }\n" +
+            "  ]\n" +
+            "}";
 
         var path = Path.Combine(streamingAssetsPath, "TestChartDivisions.json");
         File.WriteAllText(path, json);
@@ -77,7 +80,7 @@ public sealed class ChartLoaderTests
     [Test]
     public void LoadFromStreamingAssets_InvalidBpmThrows()
     {
-        var json = @"{ \"musicFile\": \"test.mp3\", \"bpm\": 0, \"offsetSec\": 0.0, \"measures\": [] }";
+        var json = "{ \"musicFile\": \"test.mp3\", \"bpm\": 0, \"offsetSec\": 0.0, \"measures\": [] }";
         var path = Path.Combine(streamingAssetsPath, "TestChartInvalidBpm.json");
         File.WriteAllText(path, json);
 
