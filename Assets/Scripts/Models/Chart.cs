@@ -8,12 +8,13 @@ public sealed class Chart
     public float OffsetSec { get; }
     public IReadOnlyList<Note> Notes { get; }
 
-    public Chart(string musicFile, byte bpm, float offsetSec, IReadOnlyList<Note> notes)
+    public Chart(string musicFile, int bpm, float offsetSec, IReadOnlyList<Note> notes)
     {
-        if (bpm <= 0) throw new ArgumentOutOfRangeException(nameof(bpm), "bpm must be > 0");
+        if (bpm <= 0 || bpm > byte.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(bpm), $"bpm must be in 1-{byte.MaxValue}");
 
         MusicFile = musicFile;
-        Bpm = bpm;
+        Bpm = (byte)bpm;
         OffsetSec = offsetSec;
         Notes = notes ?? throw new ArgumentNullException(nameof(notes));
     }

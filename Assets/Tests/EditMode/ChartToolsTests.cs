@@ -85,6 +85,50 @@ public class ChartToolsTests
     }
 
     [Test]
+    public void ChartLoader_BpmAboveByteMax_Throws()
+    {
+        var fileName = "chart_loader_invalid_high_bpm.json";
+        var chartJson = new ChartJson
+        {
+            musicFile = "song.ogg",
+            bpm = byte.MaxValue + 1,
+            offsetSec = 0f,
+            measures = Array.Empty<ChartJson.Measure>()
+        };
+
+        WriteChartJson(fileName, chartJson);
+
+        Assert.Throws<InvalidDataException>(() => ChartLoader.LoadFromStreamingAssets(fileName));
+    }
+
+    [Test]
+    public void ChartLoader_AcceptsUpperBoundBpm()
+    {
+        var fileName = "chart_loader_upper_bound_bpm.json";
+        var chartJson = new ChartJson
+        {
+            musicFile = "song.ogg",
+            bpm = byte.MaxValue,
+            offsetSec = 0f,
+            measures = new[]
+            {
+                new ChartJson.Measure
+                {
+                    subdiv = 4,
+                    rows = new[] { "1000", "0000", "0000", "0000" }
+                }
+            }
+        };
+
+        WriteChartJson(fileName, chartJson);
+
+        var chart = ChartLoader.LoadFromStreamingAssets(fileName);
+
+        Assert.That(chart.Bpm, Is.EqualTo(byte.MaxValue));
+        Assert.That(chart.Notes, Is.Not.Empty);
+    }
+
+    [Test]
     public void ChartRecorder_SavesUsingCorrectedSubdivision()
     {
         var chart = new Chart("song.ogg", 120, 0f, Array.Empty<Note>());

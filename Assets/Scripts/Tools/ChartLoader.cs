@@ -15,7 +15,8 @@ public static class ChartLoader
                   ?? throw new InvalidDataException($"Failed to parse {nameof(ChartJson)}.");
         raw.measures ??= Array.Empty<ChartJson.Measure>();
 
-        if (raw.bpm <= 0) throw new InvalidDataException($"Invalid bpm: {raw.bpm}");
+        if (raw.bpm <= 0 || raw.bpm > byte.MaxValue)
+            throw new InvalidDataException($"Invalid bpm: {raw.bpm}");
 
         var secPerBeat = 60.0 / raw.bpm;
         var secPerMeasure = secPerBeat * 4.0;
