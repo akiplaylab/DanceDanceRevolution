@@ -85,13 +85,13 @@ public class ChartToolsTests
     }
 
     [Test]
-    public void ChartLoader_BpmAboveByteMax_Throws()
+    public void ChartLoader_BpmAboveMax_Throws()
     {
         var fileName = "chart_loader_invalid_high_bpm.json";
         var chartJson = new ChartJson
         {
             musicFile = "song.ogg",
-            bpm = byte.MaxValue + 1,
+            bpm = 1001,
             offsetSec = 0f,
             measures = Array.Empty<ChartJson.Measure>()
         };
@@ -108,7 +108,7 @@ public class ChartToolsTests
         var chartJson = new ChartJson
         {
             musicFile = "song.ogg",
-            bpm = byte.MaxValue,
+            bpm = 1000,
             offsetSec = 0f,
             measures = new[]
             {
@@ -124,7 +124,7 @@ public class ChartToolsTests
 
         var chart = ChartLoader.LoadFromStreamingAssets(fileName);
 
-        Assert.That(chart.Bpm, Is.EqualTo(byte.MaxValue));
+        Assert.That(chart.Bpm, Is.EqualTo(1000));
         Assert.That(chart.Notes, Is.Not.Empty);
     }
 
