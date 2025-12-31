@@ -349,6 +349,7 @@ MonoBehaviour:
     miss: 0.2
     judgementText: {fileID: 606214357}
     razerChroma: {fileID: 1578084507}
+  resultPresenter: {fileID: 0}
 --- !u!4 &567772417
 Transform:
   m_ObjectHideFlags: 0
@@ -829,6 +830,54 @@ MonoBehaviour:
   punchScale: 1.12
   punchUpTime: 0.04
   punchDownTime: 0.06
+--- !u!1 &1061028774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1061028776}
+  - component: {fileID: 1061028775}
+  m_Layer: 0
+  m_Name: Result
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1061028775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061028774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31fbc044f0240459bd42636281f90e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResultPresenter
+  root: {fileID: 1061028774}
+  headline: {fileID: 0}
+  judgementList: {fileID: 0}
+  headlineText: RESULT
+--- !u!4 &1061028776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061028774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1098005561
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,3 +1483,4 @@ SceneRoots:
   - {fileID: 114332600}
   - {fileID: 658176344}
   - {fileID: 1578084506}
+  - {fileID: 1061028776}
