@@ -108,6 +108,15 @@ public sealed class Game : MonoBehaviour
 
         CleanupMissed(songTime);
 
+        bool allSpawned = nextSpawnIndex >= chart.Notes.Count;
+        bool noActiveNotes = active.Values.All(list => list.Count == 0);
+
+        if (allSpawned && noActiveNotes)
+        {
+            EndToResult();
+            return;
+        }
+
         if (nextSpawnIndex >= chart.Notes.Count && !audioSource.isPlaying)
         {
             EndToResult();
