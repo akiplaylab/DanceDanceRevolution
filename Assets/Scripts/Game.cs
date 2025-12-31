@@ -49,6 +49,8 @@ public sealed class Game : MonoBehaviour
     bool isEnding;
     float initialVolume;
 
+    readonly JudgementCounter counter = new();
+
     readonly Dictionary<Lane, LinkedList<NoteView>> active = new()
     {
         [Lane.Left] = new(),
@@ -64,6 +66,9 @@ public sealed class Game : MonoBehaviour
 
     IEnumerator Start()
     {
+        ResultStore.Clear();
+        counter.Reset();
+
         chart = ChartLoader.LoadFromStreamingAssets(chartFileName);
 
         recorder = new ChartRecorder(enableRecording, recordedFileName, recordSubdiv);
@@ -170,6 +175,7 @@ public sealed class Game : MonoBehaviour
 
         if (judgement.ShouldConsumeNote)
         {
+            counter.Record(judgement.Judgement);
             list.RemoveFirst();
             notePool.Return(note);
         }
@@ -185,6 +191,7 @@ public sealed class Game : MonoBehaviour
                 var n = list.First.Value;
                 if (songTime <= n.TimeSec + judge.MissWindow) break;
 
+                counter.RecordMiss();
                 Debug.Log($"{lane}: Miss (late)");
                 list.RemoveFirst();
                 notePool.Return(n);
@@ -240,6 +247,9 @@ public sealed class Game : MonoBehaviour
 
             audioSource.volume = initialVolume;
         }
+
+        ResultStore.Summary = counter.CreateSummary();
+        ResultStore.HasSummary = true;
 
         SceneManager.LoadScene("ResultScene");
     }
