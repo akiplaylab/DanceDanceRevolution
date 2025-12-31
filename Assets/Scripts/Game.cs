@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public sealed class Game : MonoBehaviour
 {
@@ -38,11 +39,17 @@ public sealed class Game : MonoBehaviour
     [Header("Judgement")]
     [SerializeField] Judge judge;
 
+    [SerializeField] float endFadeOutSec = 0.4f;
+
     Chart chart;
     ChartRecorder recorder;
     NoteViewPool notePool;
     double dspStartTime;
     int nextSpawnIndex;
+    bool isEnding;
+    float initialVolume;
+
+    readonly JudgementCounter counter = new();
 
     readonly Dictionary<Lane, LinkedList<NoteView>> active = new()
     {
@@ -59,11 +66,15 @@ public sealed class Game : MonoBehaviour
 
     IEnumerator Start()
     {
+        ResultStore.Clear();
+        counter.Reset();
+
         chart = ChartLoader.LoadFromStreamingAssets(chartFileName);
 
         recorder = new ChartRecorder(enableRecording, recordedFileName, recordSubdiv);
 
         audioSource.clip = musicClip;
+        initialVolume = audioSource != null ? audioSource.volume : 1f;
 
         if (!musicClip.preloadAudioData)
             musicClip.LoadAudioData();
@@ -84,6 +95,9 @@ public sealed class Game : MonoBehaviour
         if (AudioSettings.dspTime < dspStartTime)
             return;
 
+        if (isEnding)
+            return;
+
         var songTime = GetSongTimeSec();
 
         SpawnNotes(songTime);
@@ -93,6 +107,20 @@ public sealed class Game : MonoBehaviour
         HandleInput(songTime);
 
         CleanupMissed(songTime);
+
+        bool allSpawned = nextSpawnIndex >= chart.Notes.Count;
+        bool noActiveNotes = active.Values.All(list => list.Count == 0);
+
+        if (allSpawned && noActiveNotes)
+        {
+            EndToResult();
+            return;
+        }
+
+        if (nextSpawnIndex >= chart.Notes.Count && !audioSource.isPlaying)
+        {
+            EndToResult();
+        }
     }
 
     double GetSongTimeSec()
@@ -161,6 +189,7 @@ public sealed class Game : MonoBehaviour
 
         if (judgement.ShouldConsumeNote)
         {
+            counter.Record(judgement.Judgement);
             list.RemoveFirst();
             notePool.Return(note);
         }
@@ -176,6 +205,7 @@ public sealed class Game : MonoBehaviour
                 var n = list.First.Value;
                 if (songTime <= n.TimeSec + judge.MissWindow) break;
 
+                counter.RecordMiss();
                 Debug.Log($"{lane}: Miss (late)");
                 list.RemoveFirst();
                 notePool.Return(n);
@@ -199,4 +229,42 @@ public sealed class Game : MonoBehaviour
         Lane.Right => rightFx,
         _ => throw new InvalidDataException($"Invalid lane: {lane}"),
     };
+
+    public void EndToResult()
+    {
+        if (isEnding) return;
+        isEnding = true;
+
+        StartCoroutine(FadeOutAndLoadResult());
+    }
+
+    IEnumerator FadeOutAndLoadResult()
+    {
+        if (audioSource != null)
+        {
+            float from = audioSource.volume;
+            float to = 0f;
+
+            float t = 0f;
+            float dur = Mathf.Max(0.01f, endFadeOutSec);
+
+            while (t < dur)
+            {
+                t += Time.unscaledDeltaTime;
+                float a = Mathf.Clamp01(t / dur);
+                audioSource.volume = Mathf.Lerp(from, to, a);
+                yield return null;
+            }
+
+            audioSource.volume = 0f;
+            audioSource.Stop();
+
+            audioSource.volume = initialVolume;
+        }
+
+        ResultStore.Summary = counter.CreateSummary();
+        ResultStore.HasSummary = true;
+
+        SceneManager.LoadScene("ResultScene");
+    }
 }
