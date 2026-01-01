@@ -357,7 +357,7 @@ MonoBehaviour:
     razerChroma: {fileID: 1578084507}
     style: {fileID: 11400000, guid: b118db814f47388438a2751bacf77473, type: 2}
   endFadeOutSec: 0.4
-  endWhenChartFinished: 0
+  endWhenChartFinished: 1
   endWhenChartFinishedDelaySec: 0.8
 --- !u!4 &567772417
 Transform:
