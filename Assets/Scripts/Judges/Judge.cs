@@ -14,6 +14,8 @@ public sealed class Judge
     [SerializeField] JudgementTextPresenter judgementText;
     [SerializeField] RazerChromaController razerChroma;
 
+    [SerializeField] JudgementStyle style;
+
     public float MissWindow => miss;
 
     public JudgementOutcome JudgeHit(Lane lane, double dt)
@@ -40,7 +42,7 @@ public sealed class Judge
             Judgement.Bad;
 
         judgementText.Show(judgement);
-        razerChroma?.TriggerJudgement(judgement, judgementText.GetColor(judgement));
+        razerChroma?.TriggerJudgement(judgement, style.GetColor(judgement));
 
         Debug.Log($"{lane}: {result} (dt={dt:0.000})");
 

@@ -6,4 +6,5 @@ public enum Judgement
     Great,
     Good,
     Bad,
+    Miss,
 }

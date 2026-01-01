@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d58cf7040837e84d8193af6ab7611a4, type: 3}
+  m_Name: JudgementStyle
+  m_EditorClassIdentifier: Assembly-CSharp::JudgementStyleSettings
+  marvelous: {r: 0.95686275, g: 0.9647059, b: 0.9529412, a: 1}
+  perfect: {r: 0.9019608, g: 0.9411765, b: 0, a: 1}
+  great: {r: 0, g: 0.9019608, b: 0.101960786, a: 1}
+  good: {r: 0, g: 0.6509804, b: 0.8392157, a: 1}
+  bad: {r: 0.83137256, g: 0, b: 0.83137256, a: 1}
+  miss: {r: 0.9019608, g: 0, b: 0, a: 1}

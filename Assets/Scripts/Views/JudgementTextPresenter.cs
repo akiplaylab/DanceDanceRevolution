@@ -12,12 +12,8 @@ public sealed class JudgementTextPresenter : MonoBehaviour
     [SerializeField] string goodText = "GOOD";
     [SerializeField] string badText = "BAD";
 
-    [Header("Colors (initial)")]
-    [SerializeField] Color marvelousColor = new Color(0.98f, 0.94f, 0.76f);
-    [SerializeField] Color perfectColor = Color.yellow;
-    [SerializeField] Color greatColor = Color.green;
-    [SerializeField] Color goodColor = Color.cyan;
-    [SerializeField] Color badColor = Color.red;
+    [Header("Colors")]
+    [SerializeField] JudgementStyle style;
 
     [Header("Punch Scale")]
 
@@ -64,17 +60,6 @@ public sealed class JudgementTextPresenter : MonoBehaviour
         transform.localScale = baseScale;
     }
 
-    public Color GetColor(Judgement j)
-    => j switch
-    {
-        Judgement.Marvelous => marvelousColor,
-        Judgement.Perfect => perfectColor,
-        Judgement.Great => greatColor,
-        Judgement.Good => goodColor,
-        Judgement.Bad => badColor,
-        _ => Color.white
-    };
-
     IEnumerator CoShow(Judgement j)
     {
         // set content
@@ -89,7 +74,7 @@ public sealed class JudgementTextPresenter : MonoBehaviour
         };
 
         text.text = s;
-        text.color = GetColor(j);
+        text.color = style.GetColor(j);
         text.alpha = 1f;
 
         if (targetScale > normalScale)
