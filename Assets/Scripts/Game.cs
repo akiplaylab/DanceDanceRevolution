@@ -78,7 +78,7 @@ public sealed class Game : MonoBehaviour
 
         selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, songs.Count - 1);
 
-        var song = SelectedSong.value ?? songs[selectedSongIndex];
+        var song = SelectedSong.Value ?? songs[selectedSongIndex];
 
         if (string.IsNullOrWhiteSpace(song.songId))
             throw new InvalidOperationException("SongDefinition.songId が空です。");

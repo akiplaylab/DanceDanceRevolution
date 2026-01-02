@@ -1,4 +1,4 @@
 public class SelectedSong
 {
-    public static SongDefinition value;
+    public static SongDefinition Value;
 }
