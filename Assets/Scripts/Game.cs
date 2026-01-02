@@ -77,7 +77,8 @@ public sealed class Game : MonoBehaviour
             throw new InvalidOperationException("songs が空です。Inspector で SongDefinition を追加してください。");
 
         selectedSongIndex = Mathf.Clamp(selectedSongIndex, 0, songs.Count - 1);
-        var song = songs[selectedSongIndex];
+
+        var song = SelectedSong.value ?? songs[selectedSongIndex];
 
         if (string.IsNullOrWhiteSpace(song.songId))
             throw new InvalidOperationException("SongDefinition.songId が空です。");
