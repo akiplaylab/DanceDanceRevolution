@@ -1,5 +1,6 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public sealed class SongSelectController : MonoBehaviour
@@ -10,32 +11,68 @@ public sealed class SongSelectController : MonoBehaviour
     [SerializeField] Transform listRoot;
     [SerializeField] SongRowView rowPrefab;
 
+    readonly List<SongRowView> rows = new();
+    int selectedIndex = 0;
+
     void Start()
     {
-        if (library == null) throw new InvalidOperationException("SongLibrary is not assigned.");
-        if (listRoot == null) throw new InvalidOperationException("listRoot is not assigned.");
-        if (rowPrefab == null) throw new InvalidOperationException("rowPrefab is not assigned.");
-        if (library.Count == 0) throw new InvalidOperationException("SongLibrary has no songs.");
-
         BuildList();
+        UpdateSelection();
+    }
+
+    void Update()
+    {
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        if (kb.upArrowKey.wasPressedThisFrame)
+            MoveSelection(-1);
+
+        if (kb.downArrowKey.wasPressedThisFrame)
+            MoveSelection(+1);
+
+        if (kb.enterKey.wasPressedThisFrame)
+            SelectSong(selectedIndex);
     }
 
     void BuildList()
     {
+        rows.Clear();
+
         for (int i = listRoot.childCount - 1; i >= 0; i--)
             Destroy(listRoot.GetChild(i).gameObject);
 
-        var songs = library.Songs;
-        for (int i = 0; i < songs.Count; i++)
+        for (int i = 0; i < library.Count; i++)
         {
             var row = Instantiate(rowPrefab, listRoot);
-            row.Bind(this, i, songs[i]);
+            row.Bind(this, i, library.Songs[i]);
+            rows.Add(row);
         }
     }
 
-    public void SelectSong(int index)
+    void MoveSelection(int delta)
     {
-        var song = library.Get(index) ?? throw new InvalidOperationException("Invalid song index.");
+        selectedIndex = Mathf.Clamp(selectedIndex + delta, 0, rows.Count - 1);
+        UpdateSelection();
+    }
+
+    void UpdateSelection()
+    {
+        for (int i = 0; i < rows.Count; i++)
+            rows[i].SetSelected(i == selectedIndex);
+    }
+
+    public void OnRowClicked(int index)
+    {
+        selectedIndex = index;
+        UpdateSelection();
+        SelectSong(index);
+    }
+
+    void SelectSong(int index)
+    {
+        var song = library.Get(index);
+        if (song == null) return;
 
         SelectedSong.Value = song;
         SceneManager.LoadScene("GameScene");

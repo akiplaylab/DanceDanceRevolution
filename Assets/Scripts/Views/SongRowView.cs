@@ -6,6 +6,11 @@ public sealed class SongRowView : MonoBehaviour
 {
     [SerializeField] Button button;
     [SerializeField] TMP_Text titleText;
+    [SerializeField] Image background;
+
+    [Header("Colors")]
+    [SerializeField] Color normalColor = Color.white;
+    [SerializeField] Color selectedColor = new Color(0.7f, 0.85f, 1f);
 
     int index;
     SongSelectController owner;
@@ -18,11 +23,11 @@ public sealed class SongRowView : MonoBehaviour
         titleText.text = song.songId;
 
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(OnClicked);
+        button.onClick.AddListener(() => owner.OnRowClicked(index));
     }
 
-    void OnClicked()
+    public void SetSelected(bool selected)
     {
-        owner.SelectSong(index);
+        background.color = selected ? selectedColor : normalColor;
     }
 }

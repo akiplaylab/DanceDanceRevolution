@@ -272,3 +272,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SongRowView
   button: {fileID: 5781832214596490140}
   titleText: {fileID: 3181758426245311776}
+  background: {fileID: 2339357999794130061}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  selectedColor: {r: 0.7, g: 0.85, b: 1, a: 1}
