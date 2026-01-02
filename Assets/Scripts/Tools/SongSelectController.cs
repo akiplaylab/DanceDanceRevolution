@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,8 +11,15 @@ public sealed class SongSelectController : MonoBehaviour
     [SerializeField] Transform listRoot;
     [SerializeField] SongRowView rowPrefab;
 
+    [Header("Sound Effects")]
+    [SerializeField] AudioSource seSource;
+    [SerializeField] AudioClip moveSe;
+    [SerializeField] AudioClip decideSe;
+    [SerializeField] float decideDelaySec = 0.12f;
+
     readonly List<SongRowView> rows = new();
     int selectedIndex = 0;
+    bool isTransitioning = false;
 
     void Start()
     {
@@ -21,6 +29,8 @@ public sealed class SongSelectController : MonoBehaviour
 
     void Update()
     {
+        if (isTransitioning) return;
+
         if (KeyBindings.MenuUpPressedThisFrame())
             MoveSelection(-1);
 
@@ -28,7 +38,7 @@ public sealed class SongSelectController : MonoBehaviour
             MoveSelection(+1);
 
         if (KeyBindings.MenuConfirmPressedThisFrame())
-            SelectSong(selectedIndex);
+            StartCoroutine(SelectSongAndLoad(selectedIndex));
     }
 
     void BuildList()
@@ -48,8 +58,14 @@ public sealed class SongSelectController : MonoBehaviour
 
     void MoveSelection(int delta)
     {
+        int prevIndex = selectedIndex;
         selectedIndex = Mathf.Clamp(selectedIndex + delta, 0, rows.Count - 1);
-        UpdateSelection();
+
+        if (selectedIndex != prevIndex)
+        {
+            UpdateSelection();
+            PlayMoveSe();
+        }
     }
 
     void UpdateSelection()
@@ -60,17 +76,43 @@ public sealed class SongSelectController : MonoBehaviour
 
     public void OnRowClicked(int index)
     {
+        if (isTransitioning) return;
+
         selectedIndex = index;
         UpdateSelection();
-        SelectSong(index);
+        StartCoroutine(SelectSongAndLoad(index));
     }
 
-    void SelectSong(int index)
+    IEnumerator SelectSongAndLoad(int index)
     {
+        isTransitioning = true;
+
         var song = library.Get(index);
-        if (song == null) return;
+        if (song == null)
+        {
+            isTransitioning = false;
+            yield break;
+        }
 
         SelectedSong.Value = song;
+
+        PlayDecideSe();
+
+        if (decideSe != null)
+            yield return new WaitForSecondsRealtime(decideSe.length);
+
         SceneManager.LoadScene("GameScene");
+    }
+
+    void PlayMoveSe()
+    {
+        if (seSource != null && moveSe != null)
+            seSource.PlayOneShot(moveSe, 0.8f);
+    }
+
+    void PlayDecideSe()
+    {
+        if (seSource != null && decideSe != null)
+            seSource.PlayOneShot(decideSe, 2.0f);
     }
 }
