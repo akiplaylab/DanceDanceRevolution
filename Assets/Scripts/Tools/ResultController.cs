@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,9 @@ public sealed class ResultController : MonoBehaviour
     [SerializeField] ResultJudgementRowView rowGood;
     [SerializeField] ResultJudgementRowView rowBad;
     [SerializeField] ResultJudgementRowView rowMiss;
+    [Header("Combo")]
+    [SerializeField] TMP_Text maxComboText;
+    [SerializeField] string maxComboFormat = "MAX COMBO {0}";
 
     void Start()
     {
@@ -28,6 +32,9 @@ public sealed class ResultController : MonoBehaviour
         rowBad.Set(Judgement.Bad, s.GetCount(Judgement.Bad));
         rowMiss.Set(Judgement.Miss, s.MissCount);
 
+        if (maxComboText != null)
+            maxComboText.text = string.Format(maxComboFormat, s.MaxCombo);
+
         ResultStore.Clear();
     }
 
@@ -39,6 +46,9 @@ public sealed class ResultController : MonoBehaviour
         rowGood.Set(Judgement.Good, 0);
         rowBad.Set(Judgement.Bad, 0);
         rowMiss.Set(Judgement.Miss, 0);
+
+        if (maxComboText != null)
+            maxComboText.text = string.Format(maxComboFormat, 0);
     }
 
     public void Retry()
