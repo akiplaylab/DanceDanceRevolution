@@ -10,7 +10,7 @@ public sealed class JudgementStyle : ScriptableObject
     public Color good = ColorUtil.HexToColor("#0F95BE");
     public Color bad = ColorUtil.HexToColor("#B911B8");
     public Color miss = ColorUtil.HexToColor("#BE120C");
-    public Color maxCombo = ColorUtil.HexToColor("#D40CF6");
+    public Color maxCombo = ColorUtil.HexToColor("#BEA20C");
 
     public Color GetColor(Judgement judgement) => judgement switch
     {
