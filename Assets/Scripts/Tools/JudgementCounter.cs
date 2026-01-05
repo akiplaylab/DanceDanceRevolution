@@ -52,7 +52,7 @@ public sealed class JudgementCounter
 
     static bool IsComboJudgement(Judgement judgement)
     {
-        return judgement is Judgement.Marvelous or Judgement.Perfect or Judgement.Great or Judgement.Good;
+        return judgement != Judgement.None && judgement < Judgement.Bad;
     }
 }
 
