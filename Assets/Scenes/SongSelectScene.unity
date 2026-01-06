@@ -674,7 +674,6 @@ MonoBehaviour:
   seSource: {fileID: 478793451}
   moveSe: {fileID: 8300000, guid: 48f604450895284409a08fd3ccee8d05, type: 3}
   decideSe: {fileID: 8300000, guid: 101a29bc01b131641a1b846af6fdaa9b, type: 3}
-  decideDelaySec: 0.12
   previewSource: {fileID: 931888949}
   previewStartTimeSec: 0
 --- !u!4 &747265254

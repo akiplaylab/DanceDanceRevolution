@@ -15,7 +15,6 @@ public sealed class SongSelectController : MonoBehaviour
     [SerializeField] AudioSource seSource;
     [SerializeField] AudioClip moveSe;
     [SerializeField] AudioClip decideSe;
-    [SerializeField] float decideDelaySec = 0.12f;
 
     [Header("Preview")]
     [SerializeField] AudioSource previewSource;
