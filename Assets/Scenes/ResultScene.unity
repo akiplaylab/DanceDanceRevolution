@@ -886,12 +886,12 @@ GameObject:
   - component: {fileID: 1064966821}
   - component: {fileID: 1064966822}
   m_Layer: 5
-  m_Name: Headline
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1064966820
 RectTransform:
   m_ObjectHideFlags: 0
@@ -939,7 +939,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RESULT
+  m_text: SCORE 0000000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -966,8 +966,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1350,6 +1350,7 @@ MonoBehaviour:
   rowBad: {fileID: 1311293616}
   rowMiss: {fileID: 230286256}
   rowMaxCombo: {fileID: 1800000001}
+  scoreText: {fileID: 1064966822}
 --- !u!224 &1990192555 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7537791590301816015, guid: c59a09b45696089498aac0967faaac14, type: 3}
