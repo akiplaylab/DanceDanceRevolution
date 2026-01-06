@@ -296,7 +296,7 @@ public sealed class Game : MonoBehaviour
             audioSource.volume = initialVolume;
         }
 
-        ResultStore.Summary = counter.CreateSummary();
+        ResultStore.Summary = counter.CreateSummary(chart?.Notes.Count ?? 0);
         ResultStore.HasSummary = true;
 
         SceneManager.LoadScene("ResultScene");

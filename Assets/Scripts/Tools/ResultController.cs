@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ public sealed class ResultController : MonoBehaviour
     [SerializeField] ResultJudgementRowView rowBad;
     [SerializeField] ResultJudgementRowView rowMiss;
     [SerializeField] ResultJudgementRowView rowMaxCombo;
+    [SerializeField] TMP_Text scoreText;
 
     void Start()
     {
@@ -32,6 +34,9 @@ public sealed class ResultController : MonoBehaviour
         if (rowMaxCombo != null)
             rowMaxCombo.SetMaxCombo(s.MaxCombo);
 
+        if (scoreText != null)
+            scoreText.text = $"SCORE {s.Score:0000000}";
+
         ResultStore.Clear();
     }
 
@@ -46,6 +51,9 @@ public sealed class ResultController : MonoBehaviour
 
         if (rowMaxCombo != null)
             rowMaxCombo.SetMaxCombo(0);
+
+        if (scoreText != null)
+            scoreText.text = "SCORE 0000000";
     }
 
     public void Retry()

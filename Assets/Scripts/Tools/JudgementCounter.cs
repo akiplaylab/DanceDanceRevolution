@@ -42,9 +42,9 @@ public sealed class JudgementCounter
         currentCombo = 0;
     }
 
-    public JudgementSummary CreateSummary()
+    public JudgementSummary CreateSummary(int totalNotes)
     {
-        return new JudgementSummary(counts, missCount, maxCombo);
+        return new JudgementSummary(counts, missCount, maxCombo, totalNotes);
     }
 
     public int CurrentCombo => currentCombo;
@@ -61,15 +61,27 @@ public readonly struct JudgementSummary
     readonly IReadOnlyDictionary<Judgement, int> counts;
     readonly int maxCombo;
 
-    public JudgementSummary(IReadOnlyDictionary<Judgement, int> counts, int missCount, int maxCombo)
+    public JudgementSummary(IReadOnlyDictionary<Judgement, int> counts, int missCount, int maxCombo, int totalNotes)
     {
         this.counts = new Dictionary<Judgement, int>(counts);
         MissCount = missCount;
         this.maxCombo = maxCombo;
+        TotalNotes = totalNotes;
+
+        Score = ScoreCalculator.Calculate(
+            totalNotes,
+            GetCount(Judgement.Marvelous),
+            GetCount(Judgement.Perfect),
+            GetCount(Judgement.Great),
+            GetCount(Judgement.Good),
+            GetCount(Judgement.Bad),
+            MissCount);
     }
 
     public int MissCount { get; }
     public int MaxCombo => maxCombo;
+    public int TotalNotes { get; }
+    public int Score { get; }
 
     public int GetCount(Judgement judgement)
     {
