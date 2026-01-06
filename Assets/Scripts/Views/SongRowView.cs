@@ -10,7 +10,7 @@ public sealed class SongRowView : MonoBehaviour
 
     [Header("Colors")]
     [SerializeField] Color normalColor = Color.white;
-    [SerializeField] Color selectedColor = new Color(0.7f, 0.85f, 1f);
+    [SerializeField] Color selectedColor = new(0.7f, 0.85f, 1f);
 
     int index;
     SongSelectController owner;
