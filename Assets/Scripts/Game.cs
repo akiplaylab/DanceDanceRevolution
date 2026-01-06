@@ -37,6 +37,7 @@ public sealed class Game : MonoBehaviour
 
     [Header("Judgement")]
     [SerializeField] Judge judge;
+    [SerializeField] ComboTextPresenter comboText;
 
     [SerializeField] float endFadeOutSec = 0.4f;
 
@@ -71,6 +72,7 @@ public sealed class Game : MonoBehaviour
     {
         ResultStore.Clear();
         counter.Reset();
+        UpdateComboDisplay();
 
         var song = (SelectedSong.Value ?? (library != null ? library.Get(fallbackSongIndex) : null))
             ?? throw new InvalidOperationException("No song selected and no fallback song available (SongLibrary missing or empty).");
@@ -216,6 +218,7 @@ public sealed class Game : MonoBehaviour
             counter.Record(judgement.Judgement);
             list.RemoveFirst();
             notePool.Return(note);
+            UpdateComboDisplay();
         }
     }
 
@@ -233,6 +236,8 @@ public sealed class Game : MonoBehaviour
                 Debug.Log($"{lane}: Miss (late)");
                 list.RemoveFirst();
                 notePool.Return(n);
+
+                UpdateComboDisplay();
             }
         }
     }
@@ -253,6 +258,11 @@ public sealed class Game : MonoBehaviour
         Lane.Right => rightFx,
         _ => throw new InvalidDataException($"Invalid lane: {lane}"),
     };
+
+    void UpdateComboDisplay()
+    {
+        comboText?.Show(counter.CurrentCombo);
+    }
 
     public void EndToResult()
     {
