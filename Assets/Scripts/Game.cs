@@ -52,6 +52,7 @@ public sealed class Game : MonoBehaviour
     bool isEnding;
     float initialVolume;
     double chartFinishedAtSongTime = double.NaN;
+    SongDefinition currentSong;
 
     readonly JudgementCounter counter = new();
 
@@ -79,6 +80,8 @@ public sealed class Game : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(song.songId))
             throw new InvalidOperationException("SongDefinition.songId が空です。");
+
+        currentSong = song;
 
         if (song.musicClip == null)
             throw new InvalidOperationException($"SongDefinition.musicClip が未設定です: {song.songId}");
@@ -298,6 +301,13 @@ public sealed class Game : MonoBehaviour
 
         ResultStore.Summary = counter.CreateSummary(chart?.Notes.Count ?? 0);
         ResultStore.HasSummary = true;
+        if (currentSong != null)
+        {
+            ResultStore.SongTitle = string.IsNullOrWhiteSpace(currentSong.songName)
+                ? currentSong.songId
+                : currentSong.songName;
+            ResultStore.MusicSource = currentSong.musicSource.ToString();
+        }
 
         SceneManager.LoadScene("ResultScene");
     }
