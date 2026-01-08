@@ -10,5 +10,7 @@ public sealed class SongDefinition
 
     public AudioClip musicClip;
 
+    public MusicSource musicSource = MusicSource.Original;
+
     public string chartFileName = "chart.json";
 }
