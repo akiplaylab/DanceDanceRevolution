@@ -14,6 +14,8 @@ public sealed class ResultController : MonoBehaviour
     [SerializeField] ResultJudgementRowView rowMaxCombo;
     [SerializeField] TMP_Text scoreText;
     [SerializeField] TMP_Text danceLevelText;
+    [SerializeField] TMP_Text songTitleText;
+    [SerializeField] TMP_Text musicSourceText;
 
     void Start()
     {
@@ -41,6 +43,8 @@ public sealed class ResultController : MonoBehaviour
         if (danceLevelText != null)
             danceLevelText.text = s.DanceLevel;
 
+        SetSongInfoText();
+
         ResultStore.Clear();
     }
 
@@ -61,6 +65,17 @@ public sealed class ResultController : MonoBehaviour
 
         if (danceLevelText != null)
             danceLevelText.text = ScoreCalculator.GetDanceLevel(0);
+
+        SetSongInfoText();
+    }
+
+    void SetSongInfoText()
+    {
+        if (songTitleText != null)
+            songTitleText.text = ResultStore.SongTitle ?? string.Empty;
+
+        if (musicSourceText != null)
+            musicSourceText.text = ResultStore.MusicSource ?? string.Empty;
     }
 
     public void Retry()
