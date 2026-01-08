@@ -7,6 +7,7 @@ public sealed class SongRowView : MonoBehaviour
 {
     [SerializeField] Button button;
     [SerializeField] TMP_Text titleText;
+    [SerializeField] TMP_Text sourceText;
     [SerializeField] Image background;
 
     [Header("Colors")]
@@ -22,6 +23,7 @@ public sealed class SongRowView : MonoBehaviour
         this.index = index;
 
         titleText.text = string.IsNullOrWhiteSpace(song.songName) ? song.songId : song.songName;
+        sourceText.text = song.musicSource.ToString();
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => owner.OnRowClicked(index));
