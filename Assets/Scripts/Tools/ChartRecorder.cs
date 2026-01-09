@@ -96,14 +96,14 @@ public sealed class ChartRecorder
         }
 
         var maxM = measures.Count == 0 ? 0 : measures.Keys.Max();
-        var outMeasures = new ChartJson.Measure[maxM + 1];
+        var outMeasures = new Measure[maxM + 1];
 
         for (int m = 0; m <= maxM; m++)
         {
             if (!measures.TryGetValue(m, out var rows))
                 rows = Enumerable.Repeat("0000", subdiv).ToArray();
 
-            outMeasures[m] = new ChartJson.Measure { subdiv = subdiv, rows = rows };
+            outMeasures[m] = new Measure { subdiv = subdiv, rows = rows };
         }
 
         var outJson = new ChartJson

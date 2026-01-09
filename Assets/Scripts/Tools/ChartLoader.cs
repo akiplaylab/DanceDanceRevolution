@@ -15,7 +15,7 @@ public static class ChartLoader
 
         var raw = JsonUtility.FromJson<ChartJson>(json)
                   ?? throw new InvalidDataException($"Failed to parse {nameof(ChartJson)}.");
-        raw.measures ??= Array.Empty<ChartJson.Measure>();
+        raw.measures ??= Array.Empty<Measure>();
 
         if (raw.bpm <= 0 || raw.bpm > MaxSupportedBpm)
             throw new InvalidDataException($"Invalid bpm: {raw.bpm} (must be between 1 and {MaxSupportedBpm})");
