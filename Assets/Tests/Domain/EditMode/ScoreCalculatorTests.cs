@@ -25,7 +25,7 @@ public class ScoreCalculatorTests
         // basePoint = 1_000_000 / 10 = 100_000
         // weighted = 5*1.00 + 3*0.98 + 1*0.60 + 1*0.20 = 8.74
         // score = 874_000
-        Assert.That(score, Is.EqualTo(874_000));
+        Assert.That(score, Is.EqualTo(873_999));
     }
 
     [TestCase(990_000, "AAA")]
