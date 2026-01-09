@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public sealed class Game : MonoBehaviour
+public sealed class PlayController : MonoBehaviour
 {
     [Header("Song Select")]
     [SerializeField] SongLibrary library;

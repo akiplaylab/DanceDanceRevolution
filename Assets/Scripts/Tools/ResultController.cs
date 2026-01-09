@@ -81,7 +81,7 @@ public sealed class ResultController : MonoBehaviour
     public void Retry()
     {
         ResultStore.Clear();
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("Play");
     }
 
     public void GoToSongSelect()
