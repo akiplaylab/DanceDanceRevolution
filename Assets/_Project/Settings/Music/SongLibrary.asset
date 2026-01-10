@@ -26,5 +26,5 @@ MonoBehaviour:
   - songId: hero
     songName: HERO
     musicClip: {fileID: 0}
-    musicSource: 0
+    musicSource: 2
     chartFileName: HERO.sm
