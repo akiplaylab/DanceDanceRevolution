@@ -224,7 +224,7 @@ public sealed class PlayController : MonoBehaviour
         {
             counter.Record(judgement.Judgement);
             list.RemoveFirst();
-            notePool.Return(note);
+            note.PlayHitBurst(judgement.Intensity, () => notePool.Return(note));
             UpdateComboDisplay();
         }
     }
