@@ -92,7 +92,7 @@ public static class SongCatalog
         var primaryPath = Path.Combine(songDir, musicFile);
         if (File.Exists(primaryPath))
         {
-            audioType = AudioType.OGGVORBIS;
+            audioType = GetAudioTypeForFile(musicFile);
             return true;
         }
 
@@ -103,7 +103,7 @@ public static class SongCatalog
             if (File.Exists(fallbackPath))
             {
                 musicFile = fallbackFile;
-                audioType = AudioType.MPEG;
+                audioType = GetAudioTypeForFile(musicFile);
                 return true;
             }
         }
@@ -111,5 +111,13 @@ public static class SongCatalog
         Debug.LogError($"Music file missing: {smPath} tag #MUSIC file '{musicTag}' (fallback '{fallbackFile}' not found).");
         audioType = AudioType.OGGVORBIS;
         return false;
+    }
+
+    static AudioType GetAudioTypeForFile(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        return extension.Equals(".mp3", StringComparison.OrdinalIgnoreCase)
+            ? AudioType.MPEG
+            : AudioType.OGGVORBIS;
     }
 }
