@@ -256,9 +256,26 @@ public sealed class SongSelectController : MonoBehaviour
         while (clip.loadState == AudioDataLoadState.Loading)
             yield return null;
 
+        float startTime = previewStartTimeSec;
+        if (song.SampleStart.HasValue)
+            startTime = song.SampleStart.Value;
+
+        startTime = Mathf.Clamp(startTime, 0f, clip.length);
+
+        float previewLength = -1f;
+        if (song.SampleLength.HasValue)
+            previewLength = Mathf.Clamp(song.SampleLength.Value, 0f, clip.length - startTime);
+
         previewSource.clip = clip;
-        previewSource.time = Mathf.Clamp(previewStartTimeSec, 0f, clip.length);
+        previewSource.time = startTime;
         previewSource.Play();
+
+        if (previewLength > 0f)
+        {
+            yield return new WaitForSecondsRealtime(previewLength);
+            if (previewSource != null && previewSource.clip == clip)
+                previewSource.Stop();
+        }
     }
 
     void StopPreview()
