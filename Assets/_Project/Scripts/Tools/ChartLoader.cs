@@ -107,15 +107,12 @@ public static class ChartLoader
                 return parts[5];
         }
 
-        var fallback = list.FirstOrDefault(entry =>
+        var fallback = (list.FirstOrDefault(entry =>
         {
             var parts = entry.Split(new[] { ':' }, 6);
             return parts.Length >= 6
                 && parts[0].Trim().Equals("dance-single", StringComparison.OrdinalIgnoreCase);
-        }) ?? list.FirstOrDefault();
-        if (fallback == null)
-            throw new InvalidDataException("No NOTES section found in simfile.");
-
+        }) ?? list.FirstOrDefault()) ?? throw new InvalidDataException("No NOTES section found in simfile.");
         var fallbackParts = fallback.Split(new[] { ':' }, 6);
         return fallbackParts.Length >= 6 ? fallbackParts[5] : fallback;
     }
